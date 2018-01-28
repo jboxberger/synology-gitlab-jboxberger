@@ -184,7 +184,8 @@ EXTRACTSIZE=$(du -k --block-size=1KB "$project_tmp/package.tgz" | cut -f1)
 sed -i -e "/^extractsize=/s/=.*/=\"$EXTRACTSIZE\"/" $project_tmp/INFO
 
 # create spk-name
-new_file_name=$project_name"-aio"$gitlab_target_package_version".spk"
+new_file_name=$project_name"-aio-"$gitlab_target_package_version".spk"
+echo "$new_file_name"
 
 cd $project_tmp/ && tar --format=gnu -cf $project_build/$new_file_name * --exclude='package' && cd ../
 if [ $IS_DEBUG == 0 ]; then
