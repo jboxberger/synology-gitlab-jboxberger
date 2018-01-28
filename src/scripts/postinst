@@ -80,11 +80,13 @@ sed -i \
 	-e "s/__SMTP_USER__/$(echo "$SMTP_USER" | quote_sed | quote_json | quote_sed)/g" \
 	-e "s/__SMTP_PASS__/$(echo "$SMTP_PASS" | quote_sed | quote_json | quote_sed)/g" \
 	-e "s/__SMTP_VERIFY__/$([ "$SMTP_VERIFY" = true ] && echo peer || echo none)/g" \
+	-e "s/__POSTGRESQL_SHARE__/$(echo "$POSTGRESQL_SHARE" | quote_sed | quote_json | quote_sed)/g" \
 	"$GITLAB_PROFILE"
 sed -i \
 	-e "s/__DB_NAME__/$(echo "$DB_NAME" | quote_sed | quote_json | quote_sed)/g" \
 	-e "s/__DB_USER__/$(echo "$DB_USER" | quote_sed | quote_json | quote_sed)/g" \
 	-e "s/__DB_PASS__/$(echo "$DB_PASS" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__POSTGRESQL_SHARE__/$(echo "$POSTGRESQL_SHARE" | quote_sed | quote_json | quote_sed)/g" \
 	"$POSTGRESQL_PROFILE"
 
 RestoreCustomEnvironmentVariables
@@ -104,9 +106,11 @@ $DOCKER_BIN exec "$REDIS_NAME" sed -i -e 's|^exec "$@"$|exec "$@" --save ""|g' /
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$REDIS_NAME"  || exit 1
 
 #POSTGRES
+if ! [ -d "$SHARE_PATH"/"$POSTGRESQL_SHARE" ]; then
+  mkdir -p "$SHARE_PATH"/"$POSTGRESQL_SHARE"
+fi
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$POSTGRESQL_NAME" force=true preserve_profile=false
-$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$POSTGRESQL_PROFILE")" || exit 1
-#$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$POSTGRESQL_NAME" || exit 1
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=true profile="$(cat "$POSTGRESQL_PROFILE")" || exit 1
 
 # GITLAB
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE" | sed -e "s/__CMD__/\/bin\/sleep\ infinity/g")" || exit 1

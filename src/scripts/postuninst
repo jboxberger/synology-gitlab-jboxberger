@@ -17,6 +17,11 @@ if [ "$SYNOPKG_PKG_STATUS" != UPGRADE ] && [ "$pkgwizard_remove_mysql" = true ];
 		log "$failed_remove_dir" "$SHARE"
 	fi
 
+	if ! rm -Rf "$SHARE_PATH/$POSTGRESQL_SHARE"; then
+		logger -p 0 "$PKG_NAME: failed to remove the folder $POSTGRESQL_SHARE"
+		log "$failed_remove_dir" "$POSTGRESQL_SHARE"
+	fi
+
 	rm "$ETC_PATH"/config
 	rm "$ETC_PATH"/config_custom
 	rm "$ETC_PATH"/config_container_ports
