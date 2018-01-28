@@ -5,7 +5,7 @@
 		"desc": "If the GitLab database is removed, all the data will be deleted.",
 		"subitems": [{
 			"key": "pkgwizard_remove_mysql",
-			"desc": "Remove GitLab database"
+			"desc": "Remove GitLab data (git repositories and database)"
 		}]
 	}]
 }]

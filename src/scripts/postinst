@@ -89,33 +89,46 @@ sed -i \
 	-e "s/__POSTGRESQL_SHARE__/$(echo "$POSTGRESQL_SHARE" | quote_sed | quote_json | quote_sed)/g" \
 	"$POSTGRESQL_PROFILE"
 
+########################################################################################################################
+# RESTORE CUSTOM CONFIGURATION
+########################################################################################################################
 RestoreCustomEnvironmentVariables
 RestoreContainerPorts
 
+########################################################################################################################
+# ADD IMAGES
+########################################################################################################################
 /var/packages/Docker/target/tool/helper \
 	"$REDIS_PACKAGE_NAME" "$REDIS_VERSION" "$TARGET_PATH"/docker/redis-$REDIS_VERSION.tar.xz $REDIS_SIZE \
 	"$POSTGRESQL_PACKAGE_NAME" "$POSTGRESQL_VERSION" "$TARGET_PATH"/docker/postgresql-$POSTGRESQL_VERSION.tar.xz $POSTGRESQL_SIZE \
 	"$GITLAB_PACKAGE_NAME" "$GITLAB_VERSION" "$TARGET_PATH"/docker/gitlab-$GITLAB_VERSION.tar.xz $GITLAB_SIZE \
 	|| exit 1
 
+########################################################################################################################
 # REDIS
+########################################################################################################################
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$REDIS_NAME" force=true preserve_profile=false
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=true profile="$(cat "$REDIS_PROFILE")" || exit 1
 # disable logging to enable sleep
 $DOCKER_BIN exec "$REDIS_NAME" sed -i -e 's|^exec "$@"$|exec "$@" --save ""|g' /usr/local/bin/docker-entrypoint.sh
-$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$REDIS_NAME"  || exit 1
 
-#POSTGRES
+########################################################################################################################
+# POSTGRES
+########################################################################################################################
 if ! [ -d "$SHARE_PATH"/"$POSTGRESQL_SHARE" ]; then
   mkdir -p "$SHARE_PATH"/"$POSTGRESQL_SHARE"
 fi
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$POSTGRESQL_NAME" force=true preserve_profile=false
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=true profile="$(cat "$POSTGRESQL_PROFILE")" || exit 1
+# because of a dependency breach the POSTGRESQL container will stop with error on first run so let us wait a little
+sleep 3
 
+########################################################################################################################
 # GITLAB
+########################################################################################################################
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE" | sed -e "s/__CMD__/\/bin\/sleep\ infinity/g")" || exit 1
 
-$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=start name="$GITLAB_NAME" || exit 1
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=start name="$GITLAB_NAME" start_dependent_container="true" || exit 1
 $DOCKER_BIN exec "$GITLAB_NAME" /sbin/entrypoint.sh app:init
 
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$GITLAB_NAME" || exit 1
@@ -124,4 +137,7 @@ $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$GIT
 
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE" | sed -e "s/__CMD__/app:start/g")" || exit 1
 
+
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$POSTGRESQL_NAME"  || exit 1
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$REDIS_NAME"  || exit 1
 exit 0

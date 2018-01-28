@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# @TODO
-# create symlink scripts\lang ln -s enu default
-# start container after update
-# fix start/stop
-
 IS_DEBUG=0
 
 ########################################################################################################################
@@ -98,6 +93,13 @@ mkdir -p "$project_tmp"
 ########################################################################################################################
 cp -R "$project_src/." "$project_tmp"
 
+########################################################################################################################
+# FIX LANG FILE
+########################################################################################################################
+cd "$project_tmp/scripts/lang"
+ln -s enu default
+cd "$current_dir"
+
 synology_gitlab_config="$project_tmp/package/config/synology_gitlab"
 synology_gitlab_db_config="$project_tmp/package/config/synology_gitlab_db"
 redis_config="$project_tmp/package/config/synology_gitlab_redis"
@@ -135,7 +137,7 @@ sed -i -e "s|__REDIS_SIZE__|$redis_target_package_download_size|g" $project_tmp/
 sed -i -e "s|__POSTGRESQL_PACKAGE_NAME__|$postgresql_target_package_name|g" $project_tmp/scripts/common
 sed -i -e "s|__POSTGRESQL_VERSION__|$postgresql_target_package_version|g" $project_tmp/scripts/common
 sed -i -e "s|__POSTGRESQL_SIZE__|$postgresql_target_package_download_size|g" $project_tmp/scripts/common
-sed -i -e "s|__POSTGRESQL_SHARE__|postgresql|g" $project_tmp/scripts/common
+sed -i -e "s|__POSTGRESQL_SHARE__|gitlab-db|g" $project_tmp/scripts/common
 
 sed -i -e "s|__GITLAB_PACKAGE_NAME__|$gitlab_target_package_name|g" $project_tmp/scripts/common
 sed -i -e "s|__GITLAB_VERSION__|$gitlab_target_package_version|g" $project_tmp/scripts/common
