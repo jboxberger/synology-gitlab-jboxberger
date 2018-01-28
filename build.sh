@@ -1,6 +1,9 @@
 #!/bin/bash
-# scripts\lang
-# ln -s enu default
+
+# @TODO
+# create symlink scripts\lang ln -s enu default
+# create /docker/posgresql on install
+# start container after update
 
 IS_DEBUG=0
 
