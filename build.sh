@@ -54,14 +54,17 @@ done
 ########################################################################################################################
 # PROCESS VARIABLES
 ########################################################################################################################
-gitlab_target_package_name=$(echo $gitlab_target_package_fqn | cut -f1 -d:)
-gitlab_target_package_version=$(echo $gitlab_target_package_fqn | cut -f2 -d:)
+gitlab_target_package_name=$(echo "$gitlab_target_package_fqn" | cut -f1 -d:)
+gitlab_target_package_version=$(echo "$gitlab_target_package_fqn" | cut -f2 -d:)
+gitlab_target_package_name_escaped=$(echo "$gitlab_target_package_name" | tr '/' '-')
 
-postgresql_target_package_name=$(echo $postgresql_target_package_fqn | cut -f1 -d:)
-postgresql_target_package_version=$(echo $postgresql_target_package_fqn | cut -f2 -d:)
+postgresql_target_package_name=$(echo "$postgresql_target_package_fqn" | cut -f1 -d:)
+postgresql_target_package_version=$(echo "$postgresql_target_package_fqn" | cut -f2 -d:)
+postgresql_target_package_name_escaped=$(echo "$postgresql_target_package_name" | tr '/' '-')
 
-redis_target_package_name=$(echo $redis_target_package_fqn | cut -f1 -d:)
-redis_target_package_version=$(echo $redis_target_package_fqn | cut -f2 -d:)
+redis_target_package_name=$(echo "$redis_target_package_fqn" | cut -f1 -d:)
+redis_target_package_version=$(echo "$redis_target_package_fqn" | cut -f2 -d:)
+redis_target_package_name_escaped=$(echo "$redis_target_package_name" | tr '/' '-')
 
 ########################################################################################################################
 # VARIABLES
@@ -134,15 +137,18 @@ sed -i -e "s|__PKG_NAME__|$project_name|g" $project_tmp/scripts/common
 sed -i -e "s|__PKG_NAME__|$project_name|g" $project_tmp/package/ui/config
 
 sed -i -e "s|__REDIS_PACKAGE_NAME__|$redis_target_package_name|g" $project_tmp/scripts/common
+sed -i -e "s|__REDIS_PACKAGE_NAME_ESCAPED__|$redis_target_package_name_escaped|g" $project_tmp/scripts/common
 sed -i -e "s|__REDIS_VERSION__|$redis_target_package_version|g" $project_tmp/scripts/common
 sed -i -e "s|__REDIS_SIZE__|$redis_target_package_download_size|g" $project_tmp/scripts/common
 
 sed -i -e "s|__POSTGRESQL_PACKAGE_NAME__|$postgresql_target_package_name|g" $project_tmp/scripts/common
+sed -i -e "s|__POSTGRESQL_PACKAGE_NAME_ESCAPED__|$postgresql_target_package_name_escaped|g" $project_tmp/scripts/common
 sed -i -e "s|__POSTGRESQL_VERSION__|$postgresql_target_package_version|g" $project_tmp/scripts/common
 sed -i -e "s|__POSTGRESQL_SIZE__|$postgresql_target_package_download_size|g" $project_tmp/scripts/common
 sed -i -e "s|__POSTGRESQL_SHARE__|gitlab-db|g" $project_tmp/scripts/common
 
 sed -i -e "s|__GITLAB_PACKAGE_NAME__|$gitlab_target_package_name|g" $project_tmp/scripts/common
+sed -i -e "s|__GITLAB_PACKAGE_NAME_ESCAPED__|$gitlab_target_package_name_escaped|g" $project_tmp/scripts/common
 sed -i -e "s|__GITLAB_VERSION__|$gitlab_target_package_version|g" $project_tmp/scripts/common
 sed -i -e "s|__GITLAB_SIZE__|$gitlab_target_package_download_size|g" $project_tmp/scripts/common
 
@@ -154,16 +160,18 @@ done
 # ADD DOCKER IMAGES
 ########################################################################################################################
 mkdir -p "$project_tmp/package/docker"
-if [ -f "docker/gitlab-$gitlab_target_package_version.tar.xz" ]; then
-    cp -rf "docker/gitlab-$gitlab_target_package_version.tar.xz" "$project_tmp/package/docker/gitlab-$gitlab_target_package_version.tar.xz"
-fi
-if [ -f "docker/postgresql-$postgresql_target_package_version.tar.xz" ]; then
-    cp -rf "docker/postgresql-$postgresql_target_package_version.tar.xz" "$project_tmp/package/docker/postgresql-$postgresql_target_package_version.tar.xz"
-fi
-if [ -f "docker/redis-$redis_target_package_version.tar.xz" ]; then
-    cp -rf "docker/redis-$redis_target_package_version.tar.xz" "$project_tmp/package/docker/redis-$redis_target_package_version.tar.xz"
+
+if [ -f "docker/$gitlab_target_package_name_escaped-$gitlab_target_package_version.tar.xz" ]; then
+    cp -rf "docker/$gitlab_target_package_name_escaped-$gitlab_target_package_version.tar.xz" "$project_tmp/package/docker/$gitlab_target_package_name_escaped-$gitlab_target_package_version.tar.xz"
 fi
 
+if [ -f "docker/$postgresql_target_package_name_escaped-$postgresql_target_package_version.tar.xz" ]; then
+    cp -rf "docker/$postgresql_target_package_name_escaped-$postgresql_target_package_version.tar.xz" "$project_tmp/package/docker/$postgresql_target_package_name_escaped-$postgresql_target_package_version.tar.xz"
+fi
+
+if [ -f "docker/$redis_target_package_name_escaped-$redis_target_package_version.tar.xz" ]; then
+    cp -rf "docker/$redis_target_package_name_escaped-$redis_target_package_version.tar.xz" "$project_tmp/package/docker/$redis_target_package_name_escaped-$redis_target_package_version.tar.xz"
+fi
 
 ########################################################################################################################
 # PACKAGE BUILD

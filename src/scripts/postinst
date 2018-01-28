@@ -99,9 +99,9 @@ RestoreContainerPorts
 # ADD IMAGES
 ########################################################################################################################
 /var/packages/Docker/target/tool/helper \
-	"$REDIS_PACKAGE_NAME" "$REDIS_VERSION" "$TARGET_PATH"/docker/redis-$REDIS_VERSION.tar.xz $REDIS_SIZE \
-	"$POSTGRESQL_PACKAGE_NAME" "$POSTGRESQL_VERSION" "$TARGET_PATH"/docker/postgresql-$POSTGRESQL_VERSION.tar.xz $POSTGRESQL_SIZE \
-	"$GITLAB_PACKAGE_NAME" "$GITLAB_VERSION" "$TARGET_PATH"/docker/gitlab-$GITLAB_VERSION.tar.xz $GITLAB_SIZE \
+	"$REDIS_PACKAGE_NAME" "$REDIS_VERSION" "$TARGET_PATH"/docker/"$REDIS_PACKAGE_NAME_ESCAPED"-"$REDIS_VERSION".tar.xz $REDIS_SIZE \
+	"$POSTGRESQL_PACKAGE_NAME" "$POSTGRESQL_VERSION" "$TARGET_PATH"/docker/"$POSTGRESQL_PACKAGE_NAME_ESCAPED"-"$POSTGRESQL_VERSION".tar.xz $POSTGRESQL_SIZE \
+	"$GITLAB_PACKAGE_NAME" "$GITLAB_VERSION" "$TARGET_PATH"/docker/"$GITLAB_PACKAGE_NAME_ESCAPED"-"$GITLAB_VERSION".tar.xz $GITLAB_SIZE \
 	|| exit 1
 
 ########################################################################################################################
