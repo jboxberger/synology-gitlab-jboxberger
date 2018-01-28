@@ -1,0 +1,15 @@
+{
+  "cpu_priority": 0,
+  "enable_publish_all_ports": false,
+  "env_variables": [],
+  "image": "__IMAGE__",
+  "is_package": false,
+  "memory_limit": 0,
+  "name": "synology_gitlab_redis",
+  "port_bindings": [],
+  "privileged": false,
+  "shortcut": {
+    "enable_shortcut": false
+  },
+  "volume_bindings": []
+}

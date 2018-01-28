@@ -1,0 +1,44 @@
+{
+  "cpu_priority": 0,
+  "enable_publish_all_ports": false,
+  "env_variables": [
+    {
+      "key": "DB_NAME",
+      "value": "__DB_NAME__"
+    },
+    {
+      "key": "DB_USER",
+      "value": "__DB_USER__"
+    },
+    {
+      "key": "DB_PASS",
+      "value": "__DB_PASS__"
+    },
+    {
+      "key": "DB_EXTENSION",
+      "value": "pg_trgm"
+    }
+  ],
+  "image": "__IMAGE__",
+  "is_package": false,
+  "memory_limit": 0,
+  "name": "synology_gitlab_db",
+  "privileged": false,
+  "shortcut": {
+    "enable_shortcut": false
+  },
+  "port_bindings": [
+    {
+      "container_port": 5432,
+      "host_port": 0,
+      "type": "tcp"
+    }
+  ],
+  "volume_bindings": [
+    {
+      "host_volume_file": "/docker/postgresql",
+      "mount_point": "/var/lib/postgresql",
+      "type": "rw"
+    }
+  ]
+}

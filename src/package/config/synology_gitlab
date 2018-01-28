@@ -1,0 +1,112 @@
+{
+  "cpu_priority": 0,
+  "enable_publish_all_ports": false,
+  "env_variables": [
+    {
+      "key": "GITLAB_HOST",
+      "value": "__HOSTNAME__"
+    },
+    {
+      "key": "GITLAB_PORT",
+      "value": "__HTTP_PORT__"
+    },
+    {
+      "key": "GITLAB_SSH_PORT",
+      "value": "__SSH_PORT__"
+    },
+    {
+      "key": "GITLAB_EMAIL",
+      "value": "__ADMIN_EMAIL__"
+    },
+    {
+      "key": "GITLAB_SECRETS_OTP_KEY_BASE",
+      "value": "__OTP_SALT__"
+    },
+    {
+      "key": "GITLAB_SECRETS_DB_KEY_BASE",
+      "value": "__DB_SALT__"
+    },
+    {
+      "key": "GITLAB_SECRETS_SECRET_KEY_BASE",
+      "value": "__SECRETS_SALT__"
+    },
+    {
+      "key": "SMTP_ENABLED",
+      "value": "__SMTP_ENABLE__"
+    },
+    {
+      "key": "SMTP_DOMAIN",
+      "value": "__SMTP_ADDR__"
+    },
+    {
+      "key": "SMTP_HOST",
+      "value": "__SMTP_ADDR__"
+    },
+    {
+      "key": "SMTP_PORT",
+      "value": "__SMTP_PORT__"
+    },
+    {
+      "key": "SMTP_USER",
+      "value": "__SMTP_USER__"
+    },
+    {
+      "key": "SMTP_PASS",
+      "value": "__SMTP_PASS__"
+    },
+    {
+      "key": "SMTP_OPENSSL_VERIFY_MODE",
+      "value": "__SMTP_VERIFY__"
+    },
+    {
+      "key": "UNICORN_TIMEOUT",
+      "value": "180"
+    }
+  ],
+  "image": "__IMAGE__",
+  "cmd": "__CMD__",
+  "is_package": false,
+  "links": [
+    {
+      "alias": "postgresql",
+      "link_container": "synology_gitlab_db"
+    },
+    {
+      "alias": "redisio",
+      "link_container": "synology_gitlab_redis"
+    }
+  ],
+  "memory_limit": 0,
+  "name": "synology_gitlab",
+  "port_bindings": [
+    {
+      "container_port": 80,
+      "host_port": "__HTTP_PORT__",
+      "type": "tcp"
+    },
+    {
+      "container_port": 22,
+      "host_port": "__SSH_PORT__",
+      "type": "tcp"
+    }
+  ],
+  "privileged": false,
+  "shortcut": {
+    "enable_shortcut": false,
+    "enable_status_page": false,
+    "enable_web_page": false,
+    "web_page_url": ""
+  },
+  "volume_bindings": [
+    {
+      "host_volume_file": "/docker/__SHARE__",
+      "mount_point": "/home/git/data",
+      "type": "rw"
+    },
+    {
+      "host_volume_file": "/docker/postgresql",
+      "mount_point": "/var/lib/postgresql",
+      "type": "rw"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+#!/bin/sh
+# Copyright (c) 2000-2015 Synology Inc. All rights reserved.
+
+. "$(dirname $0)"/common
+. "$ETC_PATH"/config
+
+/usr/syno/bin/synowebapi --exec api=SYNO.Docker.Container version=1 method=delete name="$GITLAB_NAME" force=true preserve_profile=false
+/usr/syno/bin/synowebapi --exec api=SYNO.Docker.Container version=1 method=delete name="$POSTGRESQL_NAME" force=true preserve_profile=false
+/usr/syno/bin/synowebapi --exec api=SYNO.Docker.Container version=1 method=delete name="$REDIS_NAME" force=true preserve_profile=false
+docker rmi "$REDIS_PACKAGE_NAME":"$REDIS_VERSION"
+docker rmi "$POSTGRESQL_PACKAGE_NAME":"$POSTGRESQL_VERSION"
+docker rmi "$GITLAB_PACKAGE_NAME":"$GITLAB_VERSION"
+
+if [ "$SYNOPKG_PKG_STATUS" != UPGRADE ] && [ "$pkgwizard_remove_mysql" = true ]; then
+	if ! rm -Rf "$SHARE_PATH/$SHARE"; then
+		logger -p 0 "$PKG_NAME: failed to remove the folder $SHARE"
+		log "$failed_remove_dir" "$SHARE"
+	fi
+
+	rm "$ETC_PATH"/config
+	rm "$ETC_PATH"/config_custom
+	rm "$ETC_PATH"/config_container_ports
+fi
+
+exit 0

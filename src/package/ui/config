@@ -1,0 +1,15 @@
+{
+    ".url": {
+        "SYNO.SDS.__PKG_NAME__": {
+            "allUsers": true,
+            "desc": "Docker GitLab",
+            "icon": "images/GitLab_{0}.png",
+            "port": "__HTTP_PORT__",
+            "protocol": "http",
+            "texts": "texts",
+            "title": "Docker GitLab",
+            "type": "url",
+            "url": "/"
+        }
+    }
+}

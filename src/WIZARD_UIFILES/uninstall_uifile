@@ -1,0 +1,26 @@
+[{
+	"step_title": "Remove GitLab database",
+	"items": [{
+		"type": "multiselect",
+		"desc": "If the GitLab database is removed, all the data will be deleted.",
+		"subitems": [{
+			"key": "pkgwizard_remove_mysql",
+			"desc": "Remove GitLab database"
+		}]
+	}, {
+		"type": "textfield",
+		"desc": "Please enter the credentials of the database administrator to remove the GitLab database.",
+		"subitems": [{
+			"key": "wizard_m10_acc",
+			"desc": "Account",
+			"defaultValue": "root"
+		}]
+	}, {
+		"type": "password",
+		"subitems": [{
+			"indent": 1,
+			"key": "wizard_m10_pass",
+			"desc": "Password"
+		}]
+	}]
+}]

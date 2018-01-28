@@ -1,0 +1,123 @@
+#!/bin/sh
+# Copyright (c) 2000-2015 Synology Inc. All rights reserved.
+
+. "$(dirname $0)"/common
+
+UpdateConfig()
+{
+	if [ -f "$ETC_PATH"/config ]; then
+		. "$ETC_PATH"/config
+	fi
+	if [ "$SYNOPKG_PKG_STATUS" = INSTALL ]; then
+		HTTP_PORT="$pkgwizard_http_port"
+		SSH_PORT="$pkgwizard_ssh_port"
+		DB_NAME="$pkgwizard_db_name"
+		DB_USER="$pkgwizard_db_user_account"
+		DB_PASS="$pkgwizard_db_user_password"
+		OTP_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
+		DB_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
+		SECRETS_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
+		HOSTNAME="$pkgwizard_hostname"
+		ADMIN_EMAIL="$pkgwizard_admin_email"
+		SMTP_ENABLE="$pkgwizard_smtp_enable"
+		SMTP_ADDR="$pkgwizard_smtp_address"
+		SMTP_PORT="$pkgwizard_smtp_port"
+		SMTP_USER="$pkgwizard_smtp_user"
+		SMTP_PASS="$pkgwizard_smtp_pass"
+		SMTP_VERIFY="$pkgwizard_smtp_verify"
+		SHARE="$pkgwizard_dataroot"
+	elif [ "$SYNOPKG_PKG_STATUS" = UPGRADE ] && [ ! -z "$pkgwizard_db_name" ]; then
+		#upgrade from M5 to M10
+		DB_NAME="$pkgwizard_db_name"
+		DB_USER="$pkgwizard_db_user_account"
+		DB_PASS="$pkgwizard_db_user_password"
+	fi
+
+	[ -z "$OTP_SALT" ] && OTP_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
+	[ -z "$DB_SALT" ] && DB_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
+	[ -z "$SECRETS_SALT" ] && SECRETS_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
+
+	(
+		echo HTTP_PORT="\"$(echo "$HTTP_PORT" | quote_sh)\""
+		echo SSH_PORT="\"$(echo "$SSH_PORT" | quote_sh)\""
+		echo DB_NAME="\"$(echo "$DB_NAME" | quote_sh)\""
+		echo DB_USER="\"$(echo "$DB_USER" | quote_sh)\""
+		echo DB_PASS="\"$(echo "$DB_PASS" | quote_sh)\""
+		echo OTP_SALT="\"$(echo "$OTP_SALT" | quote_sh)\""
+		echo DB_SALT="\"$(echo "$DB_SALT" | quote_sh)\""
+		echo SECRETS_SALT="\"$(echo "$SECRETS_SALT" | quote_sh)\""
+		echo HOSTNAME="\"$(echo "$HOSTNAME" | quote_sh)\""
+		echo ADMIN_EMAIL="\"$(echo "$ADMIN_EMAIL" | quote_sh)\""
+		echo SMTP_ENABLE="\"$(echo "$SMTP_ENABLE" | quote_sh)\""
+		echo SMTP_ADDR="\"$(echo "$SMTP_ADDR" | quote_sh)\""
+		echo SMTP_PORT="\"$(echo "$SMTP_PORT" | quote_sh)\""
+		echo SMTP_USER="\"$(echo "$SMTP_USER" | quote_sh)\""
+		echo SMTP_PASS="\"$(echo "$SMTP_PASS" | quote_sh)\""
+		echo SMTP_VERIFY="\"$(echo "$SMTP_VERIFY" | quote_sh)\""
+		echo SHARE="\"$(echo "$SHARE" | quote_sh)\""
+		echo VERSION="\"$(echo "$SYNOPKG_PKGVER" | cut -d '-' -f 2 | quote_sh)\""
+	) > "$ETC_PATH"/config
+}
+
+UpdateConfig
+. "$ETC_PATH"/config
+
+sed -i \
+	-e "s/__HTTP_PORT__/$(echo "$HTTP_PORT" | quote_json | quote_sed)/g" \
+	"$TARGET_PATH"/ui/config \
+	"$GITLAB_PROFILE"
+sed -i \
+	-e "s/__SSH_PORT__/$(echo "$SSH_PORT" | quote_json | quote_sed)/g" \
+	-e "s/__SHARE__/$(echo "$SHARE" | quote_json | quote_sed)/g" \
+	-e "s/__OTP_SALT__/$(echo "$OTP_SALT" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__DB_SALT__/$(echo "$DB_SALT" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__SECRETS_SALT__/$(echo "$SECRETS_SALT" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__HOSTNAME__/$(echo "$HOSTNAME" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__ADMIN_EMAIL__/$(echo "$ADMIN_EMAIL" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__SMTP_ENABLE__/$(echo "$SMTP_ENABLE" | quote_json | quote_sed)/g" \
+	-e "s/__SMTP_ADDR__/$(echo "$SMTP_ADDR" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__SMTP_PORT__/$(echo "$SMTP_PORT" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__SMTP_USER__/$(echo "$SMTP_USER" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__SMTP_PASS__/$(echo "$SMTP_PASS" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__SMTP_VERIFY__/$([ "$SMTP_VERIFY" = true ] && echo peer || echo none)/g" \
+	"$GITLAB_PROFILE"
+sed -i \
+	-e "s/__DB_NAME__/$(echo "$DB_NAME" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__DB_USER__/$(echo "$DB_USER" | quote_sed | quote_json | quote_sed)/g" \
+	-e "s/__DB_PASS__/$(echo "$DB_PASS" | quote_sed | quote_json | quote_sed)/g" \
+	"$POSTGRESQL_PROFILE"
+
+RestoreCustomEnvironmentVariables
+RestoreContainerPorts
+
+/var/packages/Docker/target/tool/helper \
+	"$REDIS_PACKAGE_NAME" "$REDIS_VERSION" "$TARGET_PATH"/docker/redis-$REDIS_VERSION.tar.xz $REDIS_SIZE \
+	"$POSTGRESQL_PACKAGE_NAME" "$POSTGRESQL_VERSION" "$TARGET_PATH"/docker/postgresql-$POSTGRESQL_VERSION.tar.xz $POSTGRESQL_SIZE \
+	"$GITLAB_PACKAGE_NAME" "$GITLAB_VERSION" "$TARGET_PATH"/docker/gitlab-$GITLAB_VERSION.tar.xz $GITLAB_SIZE \
+	|| exit 1
+
+# REDIS
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$REDIS_NAME" force=true preserve_profile=false
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=true profile="$(cat "$REDIS_PROFILE")" || exit 1
+# disable logging to enable sleep
+$DOCKER_BIN exec "$REDIS_NAME" sed -i -e 's|^exec "$@"$|exec "$@" --save ""|g' /usr/local/bin/docker-entrypoint.sh
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$REDIS_NAME"  || exit 1
+
+#POSTGRES
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$POSTGRESQL_NAME" force=true preserve_profile=false
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$POSTGRESQL_PROFILE")" || exit 1
+#$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$POSTGRESQL_NAME" || exit 1
+
+# GITLAB
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE" | sed -e "s/__CMD__/\/bin\/sleep\ infinity/g")" || exit 1
+
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=start name="$GITLAB_NAME" || exit 1
+$DOCKER_BIN exec "$GITLAB_NAME" /sbin/entrypoint.sh app:init
+
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$GITLAB_NAME" || exit 1
+
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$GITLAB_NAME" force=true preserve_profile=false
+
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE" | sed -e "s/__CMD__/app:start/g")" || exit 1
+
+exit 0
