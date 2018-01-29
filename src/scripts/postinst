@@ -14,9 +14,9 @@ UpdateConfig()
 		DB_NAME="$pkgwizard_db_name"
 		DB_USER="$pkgwizard_db_user_account"
 		DB_PASS="$pkgwizard_db_user_password"
-		OTP_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
-		DB_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
-		SECRETS_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
+		OTP_SALT="$(openssl rand -base64 48 2> /dev/null | sed 's,/,_,g')"
+		DB_SALT="$(openssl rand -base64 48 2> /dev/null | sed 's,/,_,g')"
+		SECRETS_SALT="$(openssl rand -base64 48 2> /dev/null | sed 's,/,_,g')"
 		HOSTNAME="$pkgwizard_hostname"
 		ADMIN_EMAIL="$pkgwizard_admin_email"
 		SMTP_ENABLE="$pkgwizard_smtp_enable"
@@ -33,9 +33,9 @@ UpdateConfig()
 		DB_PASS="$pkgwizard_db_user_password"
 	fi
 
-	[ -z "$OTP_SALT" ] && OTP_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
-	[ -z "$DB_SALT" ] && DB_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
-	[ -z "$SECRETS_SALT" ] && SECRETS_SALT="$(openssl rand -base64 48 | sed 's,/,_,g')"
+	[ -z "$OTP_SALT" ] && OTP_SALT="$(openssl rand -base64 48 2> /dev/null | sed 's,/,_,g')"
+	[ -z "$DB_SALT" ] && DB_SALT="$(openssl rand -base64 48 2> /dev/null | sed 's,/,_,g')"
+	[ -z "$SECRETS_SALT" ] && SECRETS_SALT="$(openssl rand -base64 48 2> /dev/null | sed 's,/,_,g')"
 
 	(
 		echo HTTP_PORT="\"$(echo "$HTTP_PORT" | quote_sh)\""
@@ -126,6 +126,12 @@ sleep 3
 ########################################################################################################################
 # GITLAB
 ########################################################################################################################
+if ! [ -f "$SHARE_PATH/$SHARE/ssh/ssh_host_key" ]; then
+  if ! [ -d "$SHARE_PATH/$SHARE/ssh" ]; then
+    mkdir -p "$SHARE_PATH/$SHARE/ssh"
+  fi
+  ssh-keygen -qt rsa1 -N "" -f "$SHARE_PATH/$SHARE/ssh/ssh_host_key"
+fi
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE" | sed -e "s/__CMD__/\/bin\/sleep\ infinity/g")" || exit 1
 
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=start name="$GITLAB_NAME" start_dependent_container="true" || exit 1
