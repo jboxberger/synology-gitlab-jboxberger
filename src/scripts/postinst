@@ -120,30 +120,19 @@ if ! [ -d "$SHARE_PATH"/"$POSTGRESQL_SHARE" ]; then
 fi
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$POSTGRESQL_NAME" force=true preserve_profile=false
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=true profile="$(cat "$POSTGRESQL_PROFILE")" || exit 1
-# because of a dependency breach the POSTGRESQL container will stop with error on first run so let us wait a little
-sleep 3
 
 ########################################################################################################################
 # GITLAB
 ########################################################################################################################
-if ! [ -f "$SHARE_PATH/$SHARE/ssh/ssh_host_key" ]; then
-  if ! [ -d "$SHARE_PATH/$SHARE/ssh" ]; then
-    mkdir -p "$SHARE_PATH/$SHARE/ssh"
-  fi
-  ssh-keygen -qt rsa1 -N "" -f "$SHARE_PATH/$SHARE/ssh/ssh_host_key"
+# fix ssh key issue on 10.4.1
+if [ $(echo "$GITLAB_VERSION" | tr -d ".") -ge 1041  ]; then
+  generate_ssh_host_keys "$SHARE_PATH/$SHARE"
 fi
-$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE" | sed -e "s/__CMD__/\/bin\/sleep\ infinity/g")" || exit 1
 
-$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=start name="$GITLAB_NAME" start_dependent_container="true" || exit 1
-$DOCKER_BIN exec "$GITLAB_NAME" /sbin/entrypoint.sh app:init
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE")" || exit 1
 
-$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$GITLAB_NAME" || exit 1
-
-$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$GITLAB_NAME" force=true preserve_profile=false
-
-$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=false profile="$(cat "$GITLAB_PROFILE" | sed -e "s/__CMD__/app:start/g")" || exit 1
-
-
+# stop dependent container to prevent start-stop-script get out of sync
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$POSTGRESQL_NAME"  || exit 1
 $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=stop name="$REDIS_NAME"  || exit 1
+
 exit 0

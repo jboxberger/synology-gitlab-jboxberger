@@ -1,6 +1,7 @@
 {
   "cpu_priority": 0,
   "enable_publish_all_ports": false,
+  "enable_restart_policy": true,
   "env_variables": [
     {
       "key": "DB_NAME",

@@ -267,3 +267,38 @@ RestoreContainerPorts()
 
     jq -c ".port_bindings=[${json_content::-1}]" < $GITLAB_PROFILE > $GITLAB_PROFILE".out" && mv $GITLAB_PROFILE".out" $GITLAB_PROFILE
 }
+
+
+
+#=======================================================================================================================
+# Fix SSH Key issue on 10.4.1
+#=======================================================================================================================
+generate_ssh_key() {
+  echo -n "${1^^} "
+  ssh-keygen -qt ${1} -N '' -f ${2}
+}
+
+generate_ssh_host_keys() {
+
+  local GITLAB_DATA_DIR=$1
+
+  if ! [ -d "$GITLAB_DATA_DIR/ssh/" ]; then
+    mkdir -p "$GITLAB_DATA_DIR/ssh/"
+  fi
+
+  if [[ ! -e ${GITLAB_DATA_DIR}/ssh/ssh_host_rsa_key ]]; then
+    echo -n "Generating OpenSSH host keys... "
+    generate_ssh_key rsa      ${GITLAB_DATA_DIR}/ssh/ssh_host_key
+    generate_ssh_key rsa      ${GITLAB_DATA_DIR}/ssh/ssh_host_rsa_key
+    generate_ssh_key dsa      ${GITLAB_DATA_DIR}/ssh/ssh_host_dsa_key
+    generate_ssh_key ecdsa    ${GITLAB_DATA_DIR}/ssh/ssh_host_ecdsa_key
+    generate_ssh_key ed25519  ${GITLAB_DATA_DIR}/ssh/ssh_host_ed25519_key
+  fi
+
+  # ensure existing host keys have the right permissions
+  chmod 0600 ${GITLAB_DATA_DIR}/ssh/*_key
+  chmod 0644 ${GITLAB_DATA_DIR}/ssh/*.pub
+}
+#=======================================================================================================================
+# Fix End
+#=======================================================================================================================

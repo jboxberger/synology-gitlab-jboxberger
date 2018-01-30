@@ -1,4 +1,6 @@
 ## synology-gitlab
+https://hub.docker.com/r/sameersbn/gitlab/
+https://hub.docker.com/r/sameersbn/postgresql/
 
 This is an upgraded and improved GitLab package which uses the stock Synology Package from [Synology Repo](https://www.synology.com/de-de/dsm/packages/Docker-GitLab). 
 

@@ -64,7 +64,7 @@
     }
   ],
   "image": "__IMAGE__",
-  "cmd": "__CMD__",
+  "cmd": "app:start",
   "is_package": false,
   "links": [
     {
