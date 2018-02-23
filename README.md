@@ -14,7 +14,7 @@ This is an upgraded and improved GitLab package which is based on the original S
 - All-In-One Installer
 - Backup/Restore scripts
 - restore custom ENVIRONMENT variables after update (any variable not in scripts/env_ignore)
-- Use Postgresql instead of MariDB
+- Use PostgreSQL instead of MariaDB
  
 ## Supported Architectures
 **x86 avoton bromolow cedarview braswell kvmx64 broadwell apollolake**  
