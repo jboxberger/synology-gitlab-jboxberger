@@ -5,7 +5,7 @@
             "desc": "Docker GitLab",
             "icon": "images/GitLab_{0}.png",
             "port": "__HTTP_PORT__",
-            "protocol": "http",
+            "protocol": "__HTTP_PROTOCOL__",
             "texts": "texts",
             "title": "Docker GitLab",
             "type": "url",

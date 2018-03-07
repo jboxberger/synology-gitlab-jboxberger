@@ -56,9 +56,11 @@ wizard_db_user_password_desc="Database user password"
 install_title="Install GitLab"
 install_data_root_desc="Create a shared folder to store the data of GitLab."
 install_data_root_label="Shared folder name"
-http_port_desc="Please enter the HTTP port number for GitLab."
+http_port_desc="Please enter the external HTTP port number for GitLab."
 http_port_label="HTTP port number"
-ssh_port_desc="Please enter the SSH port number for GitLab."
+http_container_port_desc="Please select the internal GitLab Container Port."
+http_container_port_label="HTTP Connection"
+ssh_port_desc="Please enter the external SSH port number for GitLab."
 ssh_port_label="SSH port number"
 hostname_label="Domain name"
 admin_email_desc="Please enter the GitLab administrator email account."
@@ -344,7 +346,8 @@ cat << EOF
 				"allowBlank": false,
 				"regex": {
 					"expr": "/^[1-9]\\\\d{0,4}$/"
-				}
+				},
+				"fn": "{var port=arguments[0]; if (port == 80 || port == 443) return 'Ports 80 and 443 are reserved ports and can not be remapped by docker!';return true;}"
 			}
 		}]
 	},{
@@ -358,10 +361,22 @@ cat << EOF
 				"allowBlank": false,
 				"regex": {
 					"expr": "/^[1-9]\\\\d{0,4}$/"
-				}
+				},
+				"fn": "{var port=arguments[0]; if (port == 22) return 'Port 22 is a reserved port and can not be remapped by docker!';return true;}"
 			}
 		}]
-	}]
+	},{
+    "type": "combobox",
+    "desc": "$http_container_port_desc",
+    "subitems": [{
+      "key": "pkgwizard_container_port",
+      "desc": "$http_container_port_label",
+      "defaultValue": "HTTP",
+      "displayField": "display_name",
+      "editable": false,
+      "store": [["HTTP","HTTP (Port 80)"],["HTTPS","HTTPS (Port 443)"],["HTTPS_SELF_SIGNED","HTTPS_SELF_SIGNED (Port 443)"]]
+    }]
+  }]
 },{
 	"step_title": "$install_title",
 	"items": [{

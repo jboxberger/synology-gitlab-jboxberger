@@ -7,6 +7,14 @@
       "value": "__HOSTNAME__"
     },
     {
+      "key": "GITLAB_HTTPS",
+      "value": "__GITLAB_HTTPS__"
+    },
+    {
+      "key": "SSL_SELF_SIGNED",
+      "value": "__SSL_SELF_SIGNED__"
+    },
+    {
       "key": "GITLAB_PORT",
       "value": "__HTTP_PORT__"
     },
@@ -80,7 +88,7 @@
   "name": "synology_gitlab",
   "port_bindings": [
     {
-      "container_port": 80,
+      "container_port": "__HTTP_CONTAINER_PORT__",
       "host_port": "__HTTP_PORT__",
       "type": "tcp"
     },

@@ -9,6 +9,44 @@ UpdateConfig()
 		. "$ETC_PATH"/config
 	fi
 	if [ "$SYNOPKG_PKG_STATUS" = INSTALL ]; then
+
+		if [ "$pkgwizard_container_port" = "HTTPS_SELF_SIGNED" ]; then
+		  GITLAB_HTTPS="true"
+		  SSL_SELF_SIGNED="true"
+		  HTTP_CONTAINER_PORT=443
+
+		  GITLAB_CERT_DIR="$SHARE_PATH/$pkgwizard_dataroot/certs"
+		  if ! [ -d "$GITLAB_CERT_DIR" ]; then
+		    mkdir -p $GITLAB_CERT_DIR
+		  fi
+
+		  if ! [ -f "$GITLAB_CERT_DIR/gitlab.key" ]; then
+		    openssl genrsa -out "$GITLAB_CERT_DIR/gitlab.key" 2048
+		  fi
+
+		  if ! [ -f "$GITLAB_CERT_DIR/gitlab.csr" ]; then
+        openssl req -new -key "$GITLAB_CERT_DIR/gitlab.key" -subj "/C=DE/ST=Germany/L=Duisburg/O=jboxberger/CN=$pkgwizard_hostname" -out "$GITLAB_CERT_DIR/gitlab.csr"
+		  fi
+
+		  if ! [ -f "$GITLAB_CERT_DIR/gitlab.crt" ]; then
+        openssl x509 -req -days 3650 -in "$GITLAB_CERT_DIR/gitlab.csr" -signkey "$GITLAB_CERT_DIR/gitlab.key" -out "$GITLAB_CERT_DIR/gitlab.crt"
+		  fi
+      chmod 400 "$GITLAB_CERT_DIR/gitlab.key"
+
+      if ! [ -f "$GITLAB_CERT_DIR/dhparam.pem" ] && [ -f "/usr/syno/etc/ssl/dh2048.pem" ]; then
+        cp "/usr/syno/etc/ssl/dh2048.pem" "$GITLAB_CERT_DIR/dhparam.pem"
+      fi
+
+    elif [ "$pkgwizard_container_port" = "HTTPS" ]; then
+		  GITLAB_HTTPS="true"
+      SSL_SELF_SIGNED="false"
+		  HTTP_CONTAINER_PORT=443
+		else
+      GITLAB_HTTPS="false"
+      SSL_SELF_SIGNED="false"
+		  HTTP_CONTAINER_PORT=80
+		fi
+
 		HTTP_PORT="$pkgwizard_http_port"
 		SSH_PORT="$pkgwizard_ssh_port"
 		DB_NAME="$pkgwizard_db_name"
@@ -26,6 +64,7 @@ UpdateConfig()
 		SMTP_PASS="$pkgwizard_smtp_pass"
 		SMTP_VERIFY="$pkgwizard_smtp_verify"
 		SHARE="$pkgwizard_dataroot"
+
 	elif [ "$SYNOPKG_PKG_STATUS" = UPGRADE ] && [ ! -z "$pkgwizard_db_name" ]; then
 		#upgrade from M5 to M10
 		DB_NAME="$pkgwizard_db_name"
@@ -38,6 +77,9 @@ UpdateConfig()
 	[ -z "$SECRETS_SALT" ] && SECRETS_SALT="$(openssl rand -base64 48 2> /dev/null | sed 's,/,_,g')"
 
 	(
+		echo GITLAB_HTTPS="\"$(echo "$GITLAB_HTTPS" | quote_sh)\""
+		echo SSL_SELF_SIGNED="\"$(echo "$SSL_SELF_SIGNED" | quote_sh)\""
+		echo HTTP_CONTAINER_PORT="\"$(echo "$HTTP_CONTAINER_PORT" | quote_sh)\""
 		echo HTTP_PORT="\"$(echo "$HTTP_PORT" | quote_sh)\""
 		echo SSH_PORT="\"$(echo "$SSH_PORT" | quote_sh)\""
 		echo DB_NAME="\"$(echo "$DB_NAME" | quote_sh)\""
@@ -62,11 +104,23 @@ UpdateConfig()
 UpdateConfig
 . "$ETC_PATH"/config
 
+GITLAB_HTTP_SCHEME="http"
+if [ $GITLAB_HTTPS == true ]; then
+  GITLAB_HTTP_SCHEME="https"
+fi
+
+sed -i \
+  -e "s/__HTTP_PROTOCOL__/$(echo "$GITLAB_HTTP_SCHEME" | quote_json | quote_sed)/g" \
+  "$TARGET_PATH"/ui/config
+
 sed -i \
 	-e "s/__HTTP_PORT__/$(echo "$HTTP_PORT" | quote_json | quote_sed)/g" \
 	"$TARGET_PATH"/ui/config \
 	"$GITLAB_PROFILE"
 sed -i \
+	-e "s/__GITLAB_HTTPS__/$(echo "$GITLAB_HTTPS" | quote_json | quote_sed)/g" \
+	-e "s/__SSL_SELF_SIGNED__/$(echo "$SSL_SELF_SIGNED" | quote_json | quote_sed)/g" \
+	-e "s/__HTTP_CONTAINER_PORT__/$(echo "$HTTP_CONTAINER_PORT" | quote_json | quote_sed)/g" \
 	-e "s/__SSH_PORT__/$(echo "$SSH_PORT" | quote_json | quote_sed)/g" \
 	-e "s/__SHARE__/$(echo "$SHARE" | quote_json | quote_sed)/g" \
 	-e "s/__OTP_SALT__/$(echo "$OTP_SALT" | quote_sed | quote_json | quote_sed)/g" \
