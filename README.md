@@ -46,7 +46,8 @@ The first docker container boot up - after installation/update - takes some minu
 #### DSM 6.1.4-15217 
 | Prev. Version | New Version | Status             |
 |---------------|-------------|--------------------|
-| 10.1.4        | 10.2.5      | error - but works  |
+| 10.1.4        | 10.2.5      | ok                 |
 | 10.2.5        | 10.3.6      | ok                 |
 | 10.3.6        | 10.4.1      | ok                 |
 | 10.4.1        | 10.4.2      | ok                 |
+| 10.4.2        | 10.5.1      | ok                 |
