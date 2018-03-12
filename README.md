@@ -1,25 +1,30 @@
-## WARNING THIS PACKAGE IS IN ALPHA STATE! DO NOT USE FOR PRODUCTION!
+## WARNING THIS PACKAGE IS IN BETA STATE! USE IT ON YOUR OWN RISK
 
-**Known Problems:**  sometimes error during update but Update works nevertheless.
+This GitLab package is based on the original Synology Package from [Synology Repo](https://www.synology.com/de-de/dsm/packages/Docker-GitLab).
 
-## synology-gitlab
-https://hub.docker.com/r/sameersbn/gitlab/
-https://hub.docker.com/r/sameersbn/postgresql/
-
-This is an upgraded and improved GitLab package which is based on the original Synology Package from [Synology Repo](https://www.synology.com/de-de/dsm/packages/Docker-GitLab). 
+## Current Status:
+Anything seems to work properly, also updates are working fine. I have not found a solution to migrate from my MariaDB 
+GitLab installation to this version yet. So i i do not use this package in production yet. This is why i choose the 
+**beta** state.
 
 **Download latest SPK**: [here](https://github.com/jboxberger/synology-gitlab/releases)  
- 
-## New since 10.1.1
+
+## Packages:
+- https://hub.docker.com/r/sameersbn/gitlab/
+- https://hub.docker.com/_/redis/
+- https://hub.docker.com/r/sameersbn/postgresql/
+
+## Features: 
 - All-In-One Installer
 - Backup/Restore scripts
 - restore custom ENVIRONMENT variables after update (any variable not in scripts/env_ignore)
-- Use PostgreSQL instead of MariaDB
+- Use PostgreSQL instead of MariaDB (Gitlab dropped MariaDB support)
 - SSL (SELF SIGNED) Out of the Box
+- import Let's Encrypt / Syno SSL certificates (experimental see import-syno-cert)
  
 ## Supported Architectures
 **x86 avoton bromolow cedarview braswell kvmx64 broadwell apollolake**  
-Since i can't test all architectures i had to make a choice which i can cover or which i expect to work. If your architecture is not in this list so please feel free to contact me and we can give it a try.  
+Since i can't test all architectures i had to make a choice which i can cover or which i expect to work. If your architecture is not in this list, please feel free to contact me and we can give it a try.  
 
 You can check the architecture of your device [here](https://github.com/SynoCommunity/spksrc/wiki/Architecture-per-Synology-model) 
 or [here](https://www.synology.com/en-us/knowledgebase/DSM/tutorial/General/What_kind_of_CPU_does_my_NAS_have).
