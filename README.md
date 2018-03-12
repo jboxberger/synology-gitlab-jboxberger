@@ -7,7 +7,7 @@ Anything seems to work properly, also updates are working fine. I have not found
 GitLab installation to this version yet. So i i do not use this package in production yet. This is why i choose the 
 **beta** state.
 
-**Download latest SPK**: [here](https://github.com/jboxberger/synology-gitlab/releases)  
+**Download latest SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
 
 ## Packages:
 - https://hub.docker.com/r/sameersbn/gitlab/
