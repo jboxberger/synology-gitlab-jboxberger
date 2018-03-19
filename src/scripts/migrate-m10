@@ -30,6 +30,42 @@ MARIADB_SOCKET="$SHARE_PATH/mysqld/mysqld-migration.sock"
 MARIADB_SOCKET_MOUNT="/"$(echo $MARIADB_SOCKET | cut -d'/' -f3-)
 
 ########################################################################################################################
+# CHECK VERSION MISMATCH
+########################################################################################################################
+GITLAB_MARIADB_CONFIG="/usr/syno/etc/packages/Docker-GitLab/config"
+GITLAB_POSTGRES_VERSION="$VERSION"
+GITLAB_MARIADB_VERSION=""
+if [ -f "$GITLAB_MARIADB_CONFIG" ]; then
+  GITLAB_MARIADB_VERSION=$(awk -F "=" '/VERSION/ {print $2}' "$GITLAB_MARIADB_CONFIG" | tr -d '"')
+fi
+
+if [ -z "$GITLAB_MARIADB_VERSION" ]; then
+  echo "###########################################################################################"
+  echo "# Could not find previous Docker-Gitlab installation to verify the MariaDB schema version. "
+  echo "# You can only migrate within GitLab one version. If the versions do not match, the        "
+  echo "# migration will fail. Matching example: MariaDB GitLab 10.1.4 to PostgreSQL GitLab 10.1.4."
+  echo "# Continue only when you know what you're doing!                                           "
+  echo "###########################################################################################"
+  read -p "Continue migration anyway? (y/n): " do_continue
+  do_continue=${do_continue:-y}
+  if [ $do_continue != "y" ]; then
+      exit 1
+  fi
+elif [ "$GITLAB_MARIADB_VERSION" != "$GITLAB_POSTGRES_VERSION" ]; then
+  echo "###########################################################################################"
+  echo "# WARNING!!! DATABASE VERSION MISMATCH DETECTED!!!                                         "
+  echo "# You can only migrate within GitLab one version. If the versions do not match, the        "
+  echo "# migration will fail. Matching example: MariaDB GitLab 10.1.4 to PostgreSQL GitLab 10.1.4."
+  echo "# Continue only when you know what you're doing!                                           "
+  echo "###########################################################################################"
+  read -p "Continue migration anyway? (y/n): " do_continue
+  do_continue=${do_continue:-y}
+  if [ $do_continue != "y" ]; then
+      exit 1
+  fi
+fi
+
+########################################################################################################################
 # PARAMETER HANDLING
 ########################################################################################################################
 while [ $# -ge 1 ]; do
