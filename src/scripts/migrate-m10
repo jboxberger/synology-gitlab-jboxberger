@@ -1,0 +1,141 @@
+#!/bin/sh
+. "$(dirname $0)"/common
+. "$ETC_PATH"/config
+
+########################################################################################################################
+# COMMON FUNCTIONS
+########################################################################################################################
+display_help() {
+    echo "Usage: $0 [parameters]" >&2
+    echo "  --maria-db-root-password      Maria DB root Password"
+    echo "  --maria-db-database           Maria DB gitlab database"
+    echo
+    echo "Example:"
+    echo "  $0 --maria-db-root-password \"password\" --maria-db-database \"gitlab_db_name\""
+    exit 1
+}
+
+########################################################################################################################
+# DEFAULTS
+########################################################################################################################
+MYSQL10_BIN="/usr/local/mariadb10/bin/mysql"
+MYSQL10_BIN_DIR="$(dirname -- "$MYSQL10_BIN")"
+
+PGLOADER_IMAGE="dimitri/pgloader:latest"
+PGLOADER_CONTAINER="dimitri-pgloader"
+
+MARIADB_PASS=""
+MARIADB_DATABASE="gitlab"
+MARIADB_SOCKET="$SHARE_PATH/mysqld/mysqld-migration.sock"
+MARIADB_SOCKET_MOUNT="/"$(echo $MARIADB_SOCKET | cut -d'/' -f3-)
+
+########################################################################################################################
+# PARAMETER HANDLING
+########################################################################################################################
+while [ $# -ge 1 ]; do
+    case "$1" in
+        --maria-db-root-password)
+            MARIADB_PASS="$2"; shift 2
+            if ! [ -z "$MARIADB_PASS" ]; then
+                MARIADB_PASS_P="${MARIADB_PASS:+-p$MARIADB_PASS}"
+                if [ "$($MYSQL10_BIN_DIR/mysqladmin ping "$MARIADB_PASS_P")" != "mysqld is alive" ]; then
+                    exit 1
+                fi
+            fi
+        ;;
+        --maria-db-database)
+            MARIADB_DATABASE="$2"; shift 2
+        ;;
+        -h | --help)
+            display_help  # Call your function
+            exit 0
+        ;;
+        --) # End of all options
+            shift
+            break
+        ;;
+        -*)
+            echo "Error: Unknown option: $1" >&2
+            ## or call function display_help
+            exit 1
+        ;;
+        *)  # No more options
+            break
+        ;;
+    esac
+done
+
+########################################################################################################################
+# VALIDATE PARAMETER DEPENDENCIES
+########################################################################################################################
+if [ -z "$MARIADB_PASS" ]; then
+    echo "--maria-db-root-password is not set!"
+    exit 1
+fi
+
+# db exists?
+RESULT=$($MYSQL10_BIN_DIR/mysqlshow --user=root --password=$MARIADB_PASS $MARIADB_DATABASE | grep -v Wildcard | grep -o $MARIADB_DATABASE)
+if ! [ "$RESULT" == "$MARIADB_DATABASE" ]; then
+    exit 1
+fi
+
+if ! $DOCKER_BIN exec -i $POSTGRESQL_NAME psql -U postgres -lqt | cut -d \| -f 1 | grep -qw $DB_NAME; then
+    echo "DATABASE: $DB_NAME do not exists!"
+    exit 1
+fi
+
+########################################################################################################################
+# CHECK IMAGE EXISTS
+########################################################################################################################
+postgres_container_exists="$(docker ps -a | grep $POSTGRESQL_NAME)"
+if ! [ "$postgres_container_exists" ]; then
+  echo "POSTGRES_CONTAINER $POSTGRESQL_NAME do not exists, sorry cant migrate!"
+  exit 1
+fi
+
+echo "create $MARIADB_SOCKET link"
+if [ -e "$MARIADB_SOCKET" ]; then
+  rm "$MARIADB_SOCKET"
+fi
+ln -s "/var/run/mysqld/mysqld10.sock" "$MARIADB_SOCKET"
+
+echo "pulling $PGLOADER_IMAGE image"
+docker_image_exists="$(docker images -q $PGLOADER_IMAGE 2> /dev/null)"
+if ! [ "$docker_image_exists" ]; then
+  docker pull $PGLOADER_IMAGE
+fi
+
+echo "creating $PGLOADER_CONTAINER container"
+docker_container_exists="$(docker ps -a | grep $PGLOADER_CONTAINER)"
+if ! [ "$docker_container_exists" ]; then
+  $SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=create is_run_instantly=true profile='{"cap_add":null,"cap_drop":null,"cmd":"bash","cpu_priority":50,"devices":null,"enable_publish_all_ports":false,"enable_restart_policy":false,"enabled":false,"env_variables":[{"key":"PATH","value":"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"}],"exporting":false,"id":"fb6ab9e5e8b8714c7089ebb724a80d3097014f99d229f14ac78ab7b1cf8b6f52","image":"dimitri/pgloader:latest","is_ddsm":false,"is_package":false,"links":[{"alias":"postgresql","link_container":"synology_gitlab_db"}],"memory_limit":0,"name":"dimitri-pgloader","network":[{"driver":"bridge","name":"bridge"}],"network_mode":"bridge","port_bindings":[],"privileged":false,"shortcut":{"enable_shortcut":false},"ulimits":null,"use_host_network":false,"volume_bindings":[{"host_volume_file":"'$MARIADB_SOCKET_MOUNT'","mount_point":"/var/run/mysqld/mysqld.sock","type":"rw"}],"volumes_from":null}'
+fi
+
+########################################################################################################################
+# Create Postgres SuperUser to migrate DB
+########################################################################################################################
+echo "CREATE gitlab_migration Superuser"
+$DOCKER_BIN exec -t -u postgres "$POSTGRESQL_NAME" psql -c "DROP USER IF EXISTS gitlab_migration; CREATE USER gitlab_migration WITH PASSWORD '99TdYCpt5AkP'; ALTER ROLE gitlab_migration WITH Superuser;"
+
+$DOCKER_BIN exec -it "$PGLOADER_CONTAINER" bash -c "cat > /root/pgloader.conf <<EOL
+LOAD DATABASE
+     FROM mysql://root:$MARIADB_PASS@unix:/var/run/mysqld/mysqld.sock:3307/$MARIADB_DATABASE
+     INTO postgres://gitlab_migration:99TdYCpt5AkP@postgresql:5432/$DB_NAME
+WITH include no drop, truncate, disable triggers, create no tables,
+     create no indexes, preserve index names, no foreign keys,
+     data only
+ALTER SCHEMA '$MARIADB_DATABASE' RENAME TO 'public';
+EOL"
+
+$DOCKER_BIN exec -it "$PGLOADER_CONTAINER" bash -c "pgloader /root/pgloader.conf"
+$DOCKER_BIN exec -it "$PGLOADER_CONTAINER" bash -c "rm /root/pgloader.conf"
+
+echo "DELETE gitlab_migration user"
+$DOCKER_BIN exec -t -u postgres "$POSTGRESQL_NAME" psql -c "DROP USER IF EXISTS gitlab_migration;"
+
+echo "DELETE pgloader docker container and image"
+$SYNO_WEBAPI --exec api=SYNO.Docker.Container version=1 method=delete name="$PGLOADER_CONTAINER" force=true preserve_profile=false
+docker rmi "$PGLOADER_IMAGE"
+
+echo "DELETE $MARIADB_SOCKET"
+rm $MARIADB_SOCKET
