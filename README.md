@@ -38,7 +38,7 @@ sudo ./var/packages/synology-gitlab-jboxberger/scripts/restore --restore-file "2
 ```
 # Updates
 **Always backup data before update! _Please be patient during the Update process_**.   
-The first docker container boot up - after installation/update - takes some minutes because GitLab needs to migrate the Database first, you can see the status in the GitLab container log (DSM docker backend). The Update is complete when the CPU begins to idle.    
+The first docker container boot up - after installation/update - takes some minutes because GitLab needs to migrate the Database first, you can see the status in the GitLab container log (DSM docker backend). **The Update is complete when the CPU begins to idle.**    
 
 #### DSM 6.1.4-15217 
 | Prev. Version | New Version | Update Result      |
