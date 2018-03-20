@@ -20,9 +20,11 @@ done
 gitlab_package_name="sameersbn/gitlab"
 postgresql_package_name="sameersbn/postgresql"
 redis_package_name="redis"
+spk_version=0100
 
 # https://microbadger.com/images/sameersbn/gitlab
 declare -A versions;      declare -a orders;
+versions["9.4.4"]="557"; orders+=( "9.4.4" )
 versions["10.1.4"]="699"; orders+=( "10.1.4" )
 versions["10.2.5"]="747"; orders+=( "10.2.5" )
 versions["10.3.6"]="763"; orders+=( "10.3.6" )
@@ -52,5 +54,6 @@ do
     ./build.sh --gitlab-fqn=$gitlab_package_fqn --gitlab-download-size=$gitlab_size \
        --postgresql-fqn=$postgresql_package_fqn --postgresql-download-size=$postgresql_size \
        --redis-fqn=$redis_package_fqn --redis-download-size=$redis_size \
+       --spk-version=$spk_version \
        "$IS_DEBUG"
 done

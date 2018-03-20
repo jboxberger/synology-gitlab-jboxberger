@@ -97,7 +97,7 @@ UpdateConfig()
 		echo SMTP_PASS="\"$(echo "$SMTP_PASS" | quote_sh)\""
 		echo SMTP_VERIFY="\"$(echo "$SMTP_VERIFY" | quote_sh)\""
 		echo SHARE="\"$(echo "$SHARE" | quote_sh)\""
-		echo VERSION="\"$(echo "$SYNOPKG_PKGVER" | cut -d '-' -f 2 | quote_sh)\""
+		echo VERSION="\"$(echo "$SYNOPKG_PKGVER" | cut -d '-' -f 1 | quote_sh)\""
 	) > "$ETC_PATH"/config
 }
 

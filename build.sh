@@ -17,6 +17,8 @@ postgresql_target_package_download_size=83
 redis_target_package_fqn="redis:3.2.11"
 redis_target_package_download_size=41
 
+spk_version=0100
+
 ########################################################################################################################
 # PARAMETER HANDLING
 ########################################################################################################################
@@ -40,6 +42,9 @@ do
         ;;
         -gs=*|--gitlab-download-size=*)
             gitlab_target_package_download_size="${i#*=}"
+        ;;
+        -v=*|--spk-version=*)
+            spk_version="${i#*=}"
         ;;
         --debug)
             IS_DEBUG=1
@@ -126,7 +131,7 @@ jq -c '.is_package=false' <$redis_config >$redis_config".out" && mv $redis_confi
 ########################################################################################################################
 # UPDATE INFO FILE
 ########################################################################################################################
-sed -i -e "/^version=/s/=.*/=\"$gitlab_target_package_version\"/" $project_tmp/INFO
+sed -i -e "/^version=/s/=.*/=\"$gitlab_target_package_version"-"$spk_version\"/" $project_tmp/INFO
 sed -i -e "/^package=/s/=.*/=\"$project_name\"/" $project_tmp/INFO
 
 
@@ -184,7 +189,7 @@ EXTRACTSIZE=$(du -k --block-size=1KB "$project_tmp/package.tgz" | cut -f1)
 sed -i -e "/^extractsize=/s/=.*/=\"$EXTRACTSIZE\"/" $project_tmp/INFO
 
 # create spk-name
-new_file_name=$project_name"-aio-"$gitlab_target_package_version".spk"
+new_file_name=$project_name"-aio-"$gitlab_target_package_version"-"$spk_version".spk"
 
 cd $project_tmp/ && tar --format=gnu -cf $project_build/$new_file_name * --exclude='package' && cd ../
 if [ $IS_DEBUG == 0 ]; then
