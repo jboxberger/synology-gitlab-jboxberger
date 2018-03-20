@@ -36,6 +36,21 @@ sudo ./var/packages/synology-gitlab-jboxberger/scripts/backup
   
 sudo ./var/packages/synology-gitlab-jboxberger/scripts/restore --restore-file "2018-02-23-00-31-24-gitlab-10.4.2.tar.gz"
 ```
+# Updates
+**Always backup data before update! _Please be patient during the Update process_**.   
+The first docker container boot up - after installation/update - takes some minutes because GitLab needs to migrate the Database first, you can see the status in the GitLab container log (DSM docker backend). The Update is complete when the CPU begins to idle.    
+
+#### DSM 6.1.4-15217 
+| Prev. Version | New Version | Status             |
+|---------------|-------------|--------------------|
+| 10.1.4        | 10.2.5      | ok                 |
+| 10.2.5        | 10.3.6      | ok                 |
+| 10.3.6        | 10.4.1      | ok                 |
+| 10.4.1        | 10.5.1      | ok                 |
+| ------------- | ----------- | ------------------ |
+|  9.4.4        | 10.5.5      | ok                 |
+| 10.2.5        | 10.5.5      | ok                 |
+| 10.5.1        | 10.5.5      | ok                 |
 
 # Migrate from stock 9.4.4-0050 Synology GitLab Package
 ```
@@ -58,19 +73,3 @@ sudo ./var/packages/synology-gitlab-jboxberger/scripts/restore --restore-file "2
  
 sudo ./var/packages/synology-gitlab-jboxberger/scripts/migrate-m10 --maria-db-root-password "mdb10-root-password" --maria-db-database "mdb10-gitlab-databse-name"
 ```
-
-# Updates
-**Always backup data before update! _Please be patient during the Update process_**.   
-The first docker container boot up - after installation/update - takes some minutes because GitLab needs to migrate the Database first, you can see the status in the GitLab container log (DSM docker backend). The Update is complete when the CPU begins to idle.    
-
-#### DSM 6.1.4-15217 
-| Prev. Version | New Version | Status             |
-|---------------|-------------|--------------------|
-| 10.1.4        | 10.2.5      | ok                 |
-| 10.2.5        | 10.3.6      | ok                 |
-| 10.3.6        | 10.4.1      | ok                 |
-| 10.4.1        | 10.5.1      | ok                 |
-| ------------- | ----------- | ------------------ |
-|  9.4.4        | 10.5.5      | ok                 |
-| 10.2.5        | 10.5.5      | ok                 |
-| 10.5.1        | 10.5.5      | ok                 |
