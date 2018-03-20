@@ -41,16 +41,16 @@ sudo ./var/packages/synology-gitlab-jboxberger/scripts/restore --restore-file "2
 The first docker container boot up - after installation/update - takes some minutes because GitLab needs to migrate the Database first, you can see the status in the GitLab container log (DSM docker backend). The Update is complete when the CPU begins to idle.    
 
 #### DSM 6.1.4-15217 
-| Prev. Version | New Version | Status             |
+| Prev. Version | New Version | Update Result      |
 |---------------|-------------|--------------------|
-| 10.1.4        | 10.2.5      | ok                 |
-| 10.2.5        | 10.3.6      | ok                 |
-| 10.3.6        | 10.4.1      | ok                 |
-| 10.4.1        | 10.5.1      | ok                 |
+| 10.1.4        | 10.2.5      | success            |
+| 10.2.5        | 10.3.6      | success            |
+| 10.3.6        | 10.4.1      | success            |
+| 10.4.1        | 10.5.1      | success            |
 | ------------- | ----------- | ------------------ |
-|  9.4.4        | 10.5.5      | ok                 |
-| 10.2.5        | 10.5.5      | ok                 |
-| 10.5.1        | 10.5.5      | ok                 |
+|  9.4.4        | 10.5.5      | success            |
+| 10.2.5        | 10.5.5      | success            |
+| 10.5.1        | 10.5.5      | success            |
 
 # Migrate from stock 9.4.4-0050 Synology GitLab Package
 ```
