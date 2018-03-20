@@ -37,6 +37,17 @@ sudo ./var/packages/synology-gitlab-jboxberger/scripts/backup
 sudo ./var/packages/synology-gitlab-jboxberger/scripts/restore --restore-file "2018-02-23-00-31-24-gitlab-10.4.2.tar.gz"
 ```
 
+# Migrate from stock 9.4.4-0050 Synology GitLab Package
+```
+1) Backup your GitLab data 
+2) Unsinstall 9.4.4-0050 GitLab Package wihout deleting data
+3) Install 9.4.4-0100 PostgreSQL GitLab Package
+4) Execute migration script with the command below. You will get a schema version missmatch warning because
+   of a bug in the stock package, just ignore and continue.
+   sudo ./var/packages/synology-gitlab-jboxberger/scripts/migrate-m10 --maria-db-root-password "mdb10-root-password" --maria-db-database "mdb10-gitlab-databse-name"
+5) You can now directrly update to GitLab 10.5.5
+```
+
 # Migrate from MariaDB 10 Version
 ```
 1) Backup your GitLab data using the backup scripts 
@@ -57,7 +68,9 @@ The first docker container boot up - after installation/update - takes some minu
 |---------------|-------------|--------------------|
 | 10.1.4        | 10.2.5      | ok                 |
 | 10.2.5        | 10.3.6      | ok                 |
-| 10.2.5        | 10.5.5      | ok                 |
 | 10.3.6        | 10.4.1      | ok                 |
 | 10.4.1        | 10.5.1      | ok                 |
+| ------------- | ----------- | ------------------ |
+|  9.4.4        | 10.5.5      | ok                 |
+| 10.2.5        | 10.5.5      | ok                 |
 | 10.5.1        | 10.5.5      | ok                 |
