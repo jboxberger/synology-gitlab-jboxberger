@@ -12,7 +12,7 @@ This GitLab package is based on the original Synology Package from [Synology Rep
 - Backup/Restore scripts
 - restore custom ENVIRONMENT variables after update (any variable not in scripts/env_ignore)
 - Use PostgreSQL instead of MariaDB (Gitlab dropped MariaDB support)
-- SSL (SELF SIGNED) Out of the Box
+- SSL (SELF SIGNED) out of the Box
 - import Let's Encrypt / Syno SSL certificates (experimental see import-syno-cert)
  
 ## Supported Architectures
@@ -63,7 +63,7 @@ The first docker container boot up - after installation/update - takes some minu
 ```
 1) Backup your GitLab data 
 2) Unsinstall 9.4.4-0050 GitLab Package wihout deleting data
-3) Install 9.4.4-0100 PostgreSQL GitLab Package
+3) Install 9.4.4-0100 PostgreSQL GitLab Package (using the same gitlab data folder as before)
 4) Execute migration script with the command below. You will get a schema version missmatch warning because
    of a bug in the stock package, just ignore and continue.
    sudo ./var/packages/synology-gitlab-jboxberger/scripts/migrate-m10 --maria-db-root-password "mdb10-root-password" --maria-db-database "mdb10-gitlab-databse-name"
