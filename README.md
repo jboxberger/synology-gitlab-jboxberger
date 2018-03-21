@@ -22,6 +22,13 @@ Since i can't test all architectures i had to make a choice which i can cover or
 You can check the architecture of your device [here](https://github.com/SynoCommunity/spksrc/wiki/Architecture-per-Synology-model) 
 or [here](https://www.synology.com/en-us/knowledgebase/DSM/tutorial/General/What_kind_of_CPU_does_my_NAS_have).
 
+## Version Enumeration
+```
+GitLab <GitLab-Version>-<Package-Version> (GitLab 10.5.5-0100)
+GitLab-Version:  as expected the GitLab version
+Package-Version: version of the application around GitLab, install backup an other scripts
+```
+
 # Backup
 ```
 # backup files will be saved in docker/backup directory
@@ -52,7 +59,7 @@ The first docker container boot up - after installation/update - takes some minu
 | 10.2.5        | 10.5.5      | success            |
 | 10.5.1        | 10.5.5      | success            |
 
-# Migrate from stock 9.4.4-0050 Synology GitLab Package
+## Migrate from stock 9.4.4-0050 Synology GitLab Package
 ```
 1) Backup your GitLab data 
 2) Unsinstall 9.4.4-0050 GitLab Package wihout deleting data
@@ -60,10 +67,10 @@ The first docker container boot up - after installation/update - takes some minu
 4) Execute migration script with the command below. You will get a schema version missmatch warning because
    of a bug in the stock package, just ignore and continue.
    sudo ./var/packages/synology-gitlab-jboxberger/scripts/migrate-m10 --maria-db-root-password "mdb10-root-password" --maria-db-database "mdb10-gitlab-databse-name"
-5) You can now directrly update to GitLab 10.5.5
+5) You can now directly update to GitLab 10.5.5
 ```
 
-# Migrate from MariaDB 10 Version
+## Migrate from MariaDB 10 Version
 ```
 1) Backup your GitLab data using the backup scripts 
 2) Update to latest MDB10 GitLab Package, at least 10.1.4 or 10.2.5
