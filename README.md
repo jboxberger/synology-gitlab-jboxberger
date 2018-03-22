@@ -62,7 +62,7 @@ The first docker container boot up - after installation/update - takes some minu
 ## Migrate from stock 9.4.4-0050 Synology GitLab Package
 ```
 1) Backup your GitLab data 
-2) Unsinstall 9.4.4-0050 GitLab Package wihout deleting data
+2) Uninstall 9.4.4-0050 GitLab Package wihout deleting data
 3) Install 9.4.4-0100 PostgreSQL GitLab Package (using the same gitlab data folder as before)
 4) Execute migration script with the command below. You will get a schema version missmatch warning because
    of a bug in the stock package, just ignore and continue.
@@ -74,7 +74,7 @@ The first docker container boot up - after installation/update - takes some minu
 ```
 1) Backup your GitLab data using the backup scripts 
 2) Update to latest MDB10 GitLab Package, at least 10.1.4 or 10.2.5
-3) Unsinstall MDB10 GitLab Package wihout deleting data
+3) Uninstall MDB10 GitLab Package wihout deleting data
 4) Install PostgreSQL GitLab Package with the same version from prevous installed MDB10 GitLab Package
 5) Execute migration script with the command below  
  
