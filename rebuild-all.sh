@@ -27,12 +27,13 @@ declare -A versions;      declare -a orders;
 versions["9.4.4"]="557"; orders+=( "9.4.4" )
 versions["10.1.4"]="699"; orders+=( "10.1.4" )
 versions["10.2.5"]="747"; orders+=( "10.2.5" )
-versions["10.3.6"]="763"; orders+=( "10.3.6" )
-versions["10.4.1"]="771"; orders+=( "10.4.1" )
-versions["10.5.1"]="799"; orders+=( "10.5.1" )
-versions["10.5.5"]="801"; orders+=( "10.5.5" )
-versions["10.5.6"]="802"; orders+=( "10.5.6" )
-versions["10.6.0"]="855"; orders+=( "10.6.0" )
+versions["10.3.6"]="728"; orders+=( "10.3.6" )
+versions["10.4.1"]="735"; orders+=( "10.4.1" )
+versions["10.5.1"]="761"; orders+=( "10.5.1" )
+versions["10.5.5"]="763"; orders+=( "10.5.5" )
+versions["10.5.6"]="764"; orders+=( "10.5.6" )
+versions["10.6.0"]="815"; orders+=( "10.6.0" )
+versions["10.6.2"]="816"; orders+=( "10.6.2" )
 
 declare -A redis_sizes
 redis_sizes["3.2.6"]=74
