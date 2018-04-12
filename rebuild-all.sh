@@ -34,6 +34,7 @@ versions["10.5.5"]="763"; orders+=( "10.5.5" )
 versions["10.5.6"]="764"; orders+=( "10.5.6" )
 versions["10.6.0"]="815"; orders+=( "10.6.0" )
 versions["10.6.2"]="816"; orders+=( "10.6.2" )
+versions["10.6.4"]="817"; orders+=( "10.6.4" )
 
 declare -A redis_sizes
 redis_sizes["3.2.6"]=74
