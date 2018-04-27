@@ -7,7 +7,7 @@ This GitLab package is based on the original Synology Package from [Synology Rep
 - 1 GB RAM ( 4GB RAM is recommended )
 - 700 MB Space on your HDD
 
-Looking for a more lightweight GIT Package with a GitLab like UI, the check my new [Gitea Synology Package](https://github.com/jboxberger/synology-gitea-jboxberger). Gitea requires only 80MB RAM and have all basic features onboard (Web UI, Git, Issues, Wiki and more).
+Looking for a more lightweight GIT Package with a GitLab like UI, then check my new [Gitea Synology Package](https://github.com/jboxberger/synology-gitea-jboxberger). Gitea requires only 80MB RAM and have all basic features onboard (Web UI, Git, Issues, Wiki and more).
  
 ## Packages:
 - https://hub.docker.com/r/sameersbn/gitlab/
