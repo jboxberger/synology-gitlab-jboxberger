@@ -73,6 +73,7 @@ The first docker container boot up - after installation/update - takes some minu
 
 #### DSM 6.1.6-15266
 | Prev. Version | New Version | Update Result      |
+|---------------|-------------|--------------------|
 | 10.6.4        | 10.7.2      | success            |
 
 ## Migrate from stock 9.4.4-0050 Synology GitLab Package
