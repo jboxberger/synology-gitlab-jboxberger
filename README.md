@@ -97,3 +97,9 @@ The first docker container boot up - after installation/update - takes some minu
  
 sudo ./var/packages/synology-gitlab-jboxberger/scripts/migrate-m10 --maria-db-root-password "mdb10-root-password" --maria-db-database "mdb10-gitlab-databse-name"
 ```
+
+## SPK Changelog
+```
+xx.x.x-0101
+- improved import-syno-cert script
+```

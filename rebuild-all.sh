@@ -20,7 +20,7 @@ done
 gitlab_package_name="sameersbn/gitlab"
 postgresql_package_name="sameersbn/postgresql"
 redis_package_name="redis"
-spk_version=0100
+spk_version=0101
 
 # https://microbadger.com/images/sameersbn/gitlab
 declare -A versions;      declare -a orders;

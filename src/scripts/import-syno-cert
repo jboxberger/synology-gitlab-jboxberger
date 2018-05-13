@@ -49,7 +49,7 @@ for current_domain_cert in ${SYNO_CERT_DIR}/*; do
 
 				echo "gitlab ssl certificate is outdated... updating from domain certificate"
 				cp ${current_domain_cert}/privkey.pem ${GITLAB_CERT_DIR}/${GITLAB_KEY}
-				cat ${current_domain_cert}/cert.pem ${current_domain_cert}/fullchain.pem > ${GITLAB_CERT_DIR}/${GITLAB_CERT}
+				cp ${current_domain_cert}/fullchain.pem ${GITLAB_CERT_DIR}/${GITLAB_CERT}
 
 				if ! [ -f "$GITLAB_CERT_DIR/dhparam.pem" ] && [ -f "/usr/syno/etc/ssl/dh2048.pem" ]; then
 					cp "/usr/syno/etc/ssl/dh2048.pem" "$GITLAB_CERT_DIR/dhparam.pem"
