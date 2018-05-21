@@ -75,6 +75,7 @@ The first docker container boot up - after installation/update - takes some minu
 | Prev. Version | New Version | Update Result      |
 |---------------|-------------|--------------------|
 | 10.6.4        | 10.7.2      | success            |
+| 10.7.2        | 10.7.4      | success            |
 
 ## Migrate from stock 9.4.4-0050 Synology GitLab Package
 ```
