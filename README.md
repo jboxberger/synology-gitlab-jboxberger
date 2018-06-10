@@ -3,9 +3,8 @@ This GitLab package is based on the original Synology Package from [Synology Rep
 **Download latest SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
 
 ## Info:
-Update to 10.8.1 delays because of a bug in gitlab image. Fix is on the way and will come with 10.8.2.
-
-See: https://github.com/sameersbn/docker-gitlab/issues/1617
+Update to 10.8.3 delays because of a bug in gitlab image. Fix is on the way and will hopefully come with 10.8.4?
+See: https://github.com/sameersbn/docker-gitlab/issues/1627
 
 ## Hardware Requirements:
 - 1 CPU core ( 2 cores is recommended )
