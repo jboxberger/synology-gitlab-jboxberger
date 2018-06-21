@@ -24,20 +24,20 @@ spk_version=0101
 
 # https://microbadger.com/images/sameersbn/gitlab
 declare -A versions;      declare -a orders;
-versions["9.4.4"]="557"; orders+=( "9.4.4" )
-versions["10.1.4"]="699"; orders+=( "10.1.4" )
-versions["10.2.5"]="747"; orders+=( "10.2.5" )
-versions["10.3.6"]="728"; orders+=( "10.3.6" )
-versions["10.4.1"]="735"; orders+=( "10.4.1" )
-versions["10.5.1"]="761"; orders+=( "10.5.1" )
-versions["10.5.5"]="763"; orders+=( "10.5.5" )
-versions["10.5.6"]="764"; orders+=( "10.5.6" )
-versions["10.6.0"]="815"; orders+=( "10.6.0" )
-versions["10.6.2"]="816"; orders+=( "10.6.2" )
-versions["10.6.4"]="817"; orders+=( "10.6.4" )
-versions["10.7.2"]="840"; orders+=( "10.7.2" )
-versions["10.7.4"]="838"; orders+=( "10.7.4" )
-versions["10.8.1"]="853"; orders+=( "10.8.1" )
+#versions["9.4.4"]="557"; orders+=( "9.4.4" )
+#versions["10.1.4"]="699"; orders+=( "10.1.4" )
+#versions["10.2.5"]="747"; orders+=( "10.2.5" )
+#versions["10.3.6"]="728"; orders+=( "10.3.6" )
+#versions["10.4.1"]="735"; orders+=( "10.4.1" )
+#versions["10.5.1"]="761"; orders+=( "10.5.1" )
+#versions["10.5.5"]="763"; orders+=( "10.5.5" )
+#versions["10.5.6"]="764"; orders+=( "10.5.6" )
+#versions["10.6.0"]="815"; orders+=( "10.6.0" )
+#versions["10.6.2"]="816"; orders+=( "10.6.2" )
+#versions["10.6.4"]="817"; orders+=( "10.6.4" )
+#versions["10.7.2"]="840"; orders+=( "10.7.2" )
+#versions["10.7.4"]="838"; orders+=( "10.7.4" )
+versions["10.8.4"]="852"; orders+=( "10.8.4" )
 
 declare -A redis_sizes
 redis_sizes["3.2.6"]=74

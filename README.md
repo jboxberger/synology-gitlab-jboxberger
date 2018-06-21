@@ -3,7 +3,7 @@ This GitLab package is based on the original Synology Package from [Synology Rep
 **Download latest SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
 
 ## Info:
-Update to 10.8.3 delays because of a bug in gitlab image. Fix is on the way and will hopefully come with 10.8.4?
+Update to 10.8.4 delays because of a bug in gitlab image. Fix is on the way and will hopefully come with 10.8.x?
 See: https://github.com/sameersbn/docker-gitlab/issues/1627
 
 ## Hardware Requirements:
@@ -59,27 +59,28 @@ sudo ./var/packages/synology-gitlab-jboxberger/scripts/restore --restore-file "2
 The first docker container boot up - after installation/update - takes some minutes because GitLab needs to migrate the Database first, you can see the status in the GitLab container log (DSM docker backend). **The Update is complete when the CPU begins to idle.**    
 
 #### DSM 6.1.4-15217 
-| Prev. Version | New Version | Update Result      |
-|---------------|-------------|--------------------|
-| 10.1.4        | 10.2.5      | success            |
-| 10.2.5        | 10.3.6      | success            |
-| 10.3.6        | 10.4.1      | success            |
-| 10.4.1        | 10.5.1      | success            |
-| ------------- | ----------- | ------------------ |
-|  9.4.4        | 10.5.5      | success            |
-| 10.2.5        | 10.5.5      | success            |
-| 10.5.1        | 10.5.5      | success            |
-| 10.5.5        | 10.5.6      | success            |
-| 10.5.6        | 10.6.0      | success            |
-| 10.6.0        | 10.6.2      | success            |
-| 10.6.2        | 10.6.4      | success            |
-| 10.6.4        | 10.7.2      | success            |
+| Prev. Version | New Version | Update Result       |
+|---------------|-------------|---------------------|
+| 10.1.4        | 10.2.5      | success             |
+| 10.2.5        | 10.3.6      | success             |
+| 10.3.6        | 10.4.1      | success             |
+| 10.4.1        | 10.5.1      | success             |
+| ------------- | ----------- | ------------------- |
+|  9.4.4        | 10.5.5      | success             |
+| 10.2.5        | 10.5.5      | success             |
+| 10.5.1        | 10.5.5      | success             |
+| 10.5.5        | 10.5.6      | success             |
+| 10.5.6        | 10.6.0      | success             |
+| 10.6.0        | 10.6.2      | success             |
+| 10.6.2        | 10.6.4      | success             |
+| 10.6.4        | 10.7.2      | success             |
 
 #### DSM 6.1.6-15266
-| Prev. Version | New Version | Update Result      |
-|---------------|-------------|--------------------|
-| 10.6.4        | 10.7.2      | success            |
-| 10.7.2        | 10.7.4      | success            |
+| Prev. Version | New Version | Update Result       |
+|---------------|-------------|---------------------|
+| 10.6.4        | 10.7.2      | success             |
+| 10.7.2        | 10.7.4      | success             |
+| 10.7.4        | 10.8.4      | fails - in progress |
 
 ## Migrate from stock 9.4.4-0050 Synology GitLab Package
 ```
