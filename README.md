@@ -2,12 +2,6 @@ This GitLab package is based on the original Synology Package from [Synology Rep
 
 **Download latest SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
 
-## Info:
-Update to 10.8.4 delays because of a bug in gitlab image. Fix is on the way and will hopefully come with 10.8.x?
-See: https://github.com/sameersbn/docker-gitlab/issues/1627
-
-A experimental 10.8.4 Build: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases/tag/10.8.4-0101-dev)
-
 ## Hardware Requirements:
 - 1 CPU core ( 2 cores is recommended )
 - 1 GB RAM ( 4GB RAM is recommended )
@@ -76,13 +70,21 @@ The first docker container boot up - after installation/update - takes some minu
 | 10.6.0        | 10.6.2      | success             |
 | 10.6.2        | 10.6.4      | success             |
 | 10.6.4        | 10.7.2      | success             |
+| 10.7.2        | 11.0.0      | success             |
 
 #### DSM 6.1.6-15266
 | Prev. Version | New Version | Update Result       |
 |---------------|-------------|---------------------|
 | 10.6.4        | 10.7.2      | success             |
 | 10.7.2        | 10.7.4      | success             |
-| 10.7.4        | 10.8.4      | fails - in progress |
+| 10.7.2 10.7.4 | 11.0.0      | success             |
+
+#### DSM 6.2-23739
+| Prev. Version | New Version | Update Result       |
+|---------------|-------------|---------------------|
+| --.-.-        | 10.7.4      | success             |
+| --.-.-        | 11.0.0      | success             |
+| 10.7.4        | 11.0.0      | success             |
 
 ## Migrate from stock 9.4.4-0050 Synology GitLab Package
 ```
