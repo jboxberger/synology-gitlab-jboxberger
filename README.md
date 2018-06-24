@@ -86,7 +86,7 @@ The first docker container boot up - after installation/update - takes some minu
 | --.-.-        | 11.0.0      | success             |
 | 10.7.4        | 11.0.0      | success             |
 
-## Migrate from stock 9.4.4-0050 Synology GitLab Package
+## Migrate from stock 9.4.4-0050 Synology GitLab Package 
 ```
 1) Backup your GitLab data 
 2) Uninstall 9.4.4-0050 GitLab Package wihout deleting data
