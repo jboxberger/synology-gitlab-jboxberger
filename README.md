@@ -78,6 +78,7 @@ The first docker container boot up - after installation/update - takes some minu
 | 10.6.4        | 10.7.2      | success             |
 | 10.7.2        | 10.7.4      | success             |
 | 10.7.2 10.7.4 | 11.0.0      | success             |
+| 11.0.0        | 11.0.1      | success             |
 
 #### DSM 6.2-23739
 | Prev. Version | New Version | Update Result       |
