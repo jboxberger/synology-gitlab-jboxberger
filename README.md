@@ -1,6 +1,6 @@
 This GitLab package is based on the original Synology Package from [Synology Repo](https://www.synology.com/de-de/dsm/packages/Docker-GitLab).
 
-**Download Gitlab 11.1.3 SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
+**Download Gitlab 11.1.4 SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
 
 ## Hardware Requirements:
 - 1 CPU core ( 2 cores is recommended )
@@ -90,6 +90,8 @@ The first docker container boot up - after installation/update - takes some minu
 | 11.0.0        | 11.0.1      | success             |
 | 11.0.1        | 11.0.4      | success             |
 | 11.0.4        | 11.1.3      | success             |
+| --.-.-        | 11.1.4      | success             |
+| 11.1.3        | 11.1.4      | success             |
 
 ## Migrate from stock 9.4.4-0050 Synology GitLab Package 
 ```
