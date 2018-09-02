@@ -79,7 +79,6 @@ smtp_pass_desc="Please enter the SMTP server password."
 smtp_pass_label="SMTP password"
 smtp_verify_desc="When GitLab is connected, verify the SMTP server's SSL certificate."
 smtp_verify_label="Verify the SSL certificate and refuse unsafe connections."
-default_gitlab_account_desc="The default login credential is root/5iveL!fe"
 
 CheckRestore()
 {
