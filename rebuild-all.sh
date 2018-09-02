@@ -20,7 +20,7 @@ done
 gitlab_package_name="sameersbn/gitlab"
 postgresql_package_name="sameersbn/postgresql"
 redis_package_name="redis"
-spk_version=0101
+spk_version=0102
 
 # https://microbadger.com/images/sameersbn/gitlab
 declare -A versions;      declare -a orders;
@@ -41,7 +41,8 @@ declare -A versions;      declare -a orders;
 #versions["11.0.1"]="882"; orders+=( "11.0.1" )
 #versions["11.0.4"]="896"; orders+=( "11.0.4" )
 #versions["11.1.3"]="761"; orders+=( "11.1.3" )
-versions["11.1.4"]="761"; orders+=( "11.1.4" )
+#versions["11.1.4"]="761"; orders+=( "11.1.4" )
+versions["11.2.3"]="696"; orders+=( "11.2.3" )
 
 declare -A redis_sizes
 redis_sizes["3.2.6"]=74
@@ -53,7 +54,7 @@ do
     gitlab_size=${versions[${orders[$i]}]}
     gitlab_package_fqn=$gitlab_package_name:$gitlab_version
 
-    postgresql_version="9.6-2"
+    postgresql_version="9.6-4"
     postgresql_size="83"
     postgresql_package_fqn=$postgresql_package_name:$postgresql_version
 

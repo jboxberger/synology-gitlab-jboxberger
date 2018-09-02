@@ -1,6 +1,6 @@
 This GitLab package is based on the original Synology Package from [Synology Repo](https://www.synology.com/de-de/dsm/packages/Docker-GitLab).
 
-**Download Gitlab 11.1.4 SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
+**Download Gitlab 11.2.3 SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
 
 ## Hardware Requirements:
 - 1 CPU core ( 2 cores is recommended )
@@ -92,6 +92,8 @@ The first docker container boot up - after installation/update - takes some minu
 | 11.0.4        | 11.1.3      | success             |
 | --.-.-        | 11.1.4      | success             |
 | 11.1.3        | 11.1.4      | success             |
+| 11.1.4        | 11.2.3      | success             |
+| --.-.-        | 11.2.3      | success             |
 
 ## Migrate from stock 9.4.4-0050 Synology GitLab Package 
 ```
@@ -119,4 +121,7 @@ sudo ./var/packages/synology-gitlab-jboxberger/scripts/migrate-m10 --maria-db-ro
 ```
 xx.x.x-0101
 - improved import-syno-cert script
+xx.x.x-0102
+- update sameersbn/postgresql from 9.6-2 to 9.6-4
+- rmoved obsolete default_gitlab_account_desc page during new install
 ```
