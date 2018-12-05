@@ -35,21 +35,6 @@ GitLab <GitLab-Version>-<Package-Version> (GitLab 10.5.5-0100)
 GitLab-Version:  as expected the GitLab version
 Package-Version: version of the application around GitLab, install backup an other scripts
 ```
-
-# Backup
-```
-# backup files will be saved in docker/backup directory
-# the backup contains the config files including !PASSWORDS! be shure to keep them in an safe place!
-
-sudo ./var/packages/synology-gitlab-jboxberger/scripts/backup	
-```
-# Restore
-```
-# restoring to a mismatched GitLab Version (e.g. 10.1.4 backup file to 9.4.4 GitLab) my cause problems
-# i highly reccommend to restore only matching backup and GitLab versions.
-  
-sudo ./var/packages/synology-gitlab-jboxberger/scripts/restore --restore-file "2018-02-23-00-31-24-gitlab-10.4.2.tar.gz"
-```
 # Updates
 **Always backup data before update! _Please be patient during the Update process_**.   
 The first docker container boot up - after installation/update - takes some minutes because GitLab needs to migrate the Database first, you can see the status in the GitLab container log (DSM docker backend). **The Update is complete when the CPU begins to idle.**    
