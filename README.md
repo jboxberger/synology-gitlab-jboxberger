@@ -1,3 +1,7 @@
+This Package will not be updated anymore. The need for this package is no longer existing because the original synology gitlab package has moved to PostgreSQL. You can easily migrate to the updated stock package [here](https://github.com/jboxberger/synology-gitlab#migration).  
+
+## 
+
 This GitLab package is based on the original Synology Package from [Synology Repo](https://www.synology.com/de-de/dsm/packages/Docker-GitLab).
 
 **Download Gitlab 11.5.0 SPK**: [here](https://github.com/jboxberger/synology-gitlab-jboxberger/releases)  
