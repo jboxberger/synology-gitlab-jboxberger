@@ -46,7 +46,8 @@ declare -A versions;      declare -a orders;
 #versions["11.3.0"]="672"; orders+=( "11.3.0" )
 #versions["11.3.4"]="674"; orders+=( "11.3.4" )
 #versions["11.4.0"]="679"; orders+=( "11.4.0" )
-versions["11.5.0"]="691"; orders+=( "11.5.0" )
+#versions["11.5.0"]="691"; orders+=( "11.5.0" )
+versions["11.5.1"]="729"; orders+=( "11.5.1" )
 
 declare -A redis_sizes
 redis_sizes["3.2.6"]=74
